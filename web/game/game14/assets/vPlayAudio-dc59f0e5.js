@@ -1,0 +1,1 @@
+import{a as n}from"./index-9b0a797c.js";const r=""+new URL("click-a7d0a1a1.mp3",import.meta.url).href,i=n(),o=new Audio(r),p=a=>{if(!i.isSoundPlayed)return;o.volume=.2;const e=t=>{t.stopPropagation(),t.stopImmediatePropagation(),o.currentTime=0,o.play()};a.addEventListener("click",e)};export{p as v};

@@ -1,0 +1,27 @@
+<%@page pageEncoding="UTF-8"%>
+<%
+	//主檔區									for twmakers 虎尾科大_多媒體互動網後台
+	String tblap = "ad_profile"; 				// 首頁輪播 廣告 相簿
+	String tblcp = "content_profile"; 			// 文案 檔案下載
+	String tbldm = "down_menu"; 				// 類別資料
+	String tblnp = "news_profile"; 				// 最新消息  
+	String tblcu = "contact_us"; 				// 聯絡我們
+	String tblmp = "member_profile"; 			// 會員資料
+	String tbltl = "trace_log";					// 瀏覽記錄
+	String tblgs = "game_score";				// 玩家遊戲遊玩記錄
+	String tblvr = "visit_record";              // 展覽人流統計
+	String tblaa = "activity_apply";            // 活動報名紀錄
+	String tblai = "activity_information";      // 活動資訊
+	String tblna = "number_adjust";
+	//系統區
+	String tblal = "admin_log";					// 管理者登入記錄
+	String tblamf = "admin_map_function"; 		// 管理者權限
+	String tblau = "admin_user"; 				// 管理者帳號
+	String tblmf = "mis_function"; 				// 後台功能選單
+	String tblnk = "number_keeper"; 			// 相關表單流水號記錄表 (for IDTool.geUID 元件使用)
+	String tblss = "site_setup"; 				// 全域通用設定
+	String tblrr  = "redirect_record";			// URL 轉址用資料表
+  //小遊戲
+  String game_business = "game_business"; // 經營大亨
+  String game_magic = "game_magic"; // 魔法寶石大冒險
+%>

@@ -1,0 +1,220 @@
+<%@ page pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jspf/import.jspf"%>
+<%@ include file="/WEB-INF/jspf/db_info_name.jspf" %>
+<%@ page import="org.json.JSONObject"%>
+<%@ page import="org.json.JSONArray"%>
+<%@ page import="java.net.URL" %>
+<%@ page import="java.net.HttpURLConnection" %>
+<%@ page import="java.net.URLEncoder"%>
+<%@ page import="java.net.URLDecoder"%>
+<%!
+//專案代號
+	String projectName = "twmakers";
+
+public String getCountry(String ip) {
+	String get_country = "tw";
+	
+	//呼叫ip-api
+	URL url;
+	HttpURLConnection connection = null;
+	StringBuilder sb_ip = new StringBuilder();
+	DataOutputStream printout;
+	DataInputStream  input;
+	try{		
+		// url = new URL("http://ip-api.com/json/"+ip);									//免費版
+		url = new URL("http://pro.ip-api.com/json/"+ip+"?key=musJlx8tlC6K3vK"); 		//付費版
+		
+		connection = (HttpURLConnection)url.openConnection();		
+		connection.setRequestMethod("GET");
+		connection.setConnectTimeout(3000);				// 連線時間超過7秒則斷線
+		connection.connect();
+	
+		int HttpResult =connection.getResponseCode();  
+	    if(HttpResult ==HttpURLConnection.HTTP_OK){
+	    	
+	    	BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(),"utf-8"));  
+	        String line = null;  
+	        while ((line = br.readLine()) != null) {  
+	            sb_ip.append(line + "\n");  
+	        }  
+	        br.close();
+	        JSONObject obj = new JSONObject(sb_ip.toString());
+	        String country = obj.getString("country");
+	        String countryCode = obj.getString("countryCode");
+	        // System.out.println(obj);
+	        
+        	get_country = countryCode;
+	    }else{
+	    	get_country = "tw";
+	    }
+	    	
+	}catch(Exception e){
+		get_country = "tw";
+	}finally{connection.disconnect();}
+	return get_country;
+}
+%>
+<%  
+	/*-- 限定IP-Start --*/ 
+	/*String ip = request.getRemoteAddr();
+	//System.out.println(ip);
+	boolean allow = false;
+	
+	String [] allow_ip = {	
+		"220.130.149.189","127.0.0.1","10.10.10.","0:0:0:0:0:0:0:1"
+	};
+	
+	for(int i=0;i<allow_ip.length;i++){
+	   if(ip.indexOf(allow_ip[i]) > -1){
+		   allow = true;
+		   break;
+	   }
+	}
+	if(!allow){
+	   response.sendRedirect("http://www.twmakers.com.tw/");
+	}*/
+	/*-- 限定IP-End --*/
+	
+	// 防止 XXS 		Alan 20201117
+	try{
+
+		StringBuffer	urlpath = request.getRequestURL();	 								// 取得路徑
+		String    		queryString = StringTool.validString(request.getQueryString());		// 取得參數
+		//String 			clientIPAddress = StringTool.validString(request.getRemoteAddr());	// 取得IP
+		
+		// 當jsp後面帶有特殊語法時跳回首頁
+		// ex. web/implement/implement2_1.jsp;&#34;onmouseover=&#39;uMio(95642)&#39;bad=&#34; 
+		String servPath = request.getServletPath();
+		
+// 		System.out.println("path"+urlpath);
+// 		System.out.println("servPath"+servPath);
+// 		System.out.println("queryString"+queryString);
+		
+		if (!urlpath.toString().endsWith("/")) {
+		    if (!urlpath.toString().endsWith(servPath)) {
+		        response.setStatus(301);
+		        response.setHeader("Location", "../../index.jsp");
+		        response.setHeader("Connection", "close");
+		    }
+		}
+		// END
+
+		queryString = urlpath + URLDecoder.decode(queryString, "UTF-8"); 					// url解碼
+		queryString = queryString.replace("&_", "").replace("%", "").replace("&", "");
+		if ((queryString.indexOf("(") > -1) ||(queryString.indexOf(")") > -1) ||(queryString.indexOf("<") > -1) ||(queryString.indexOf(">") > -1) ||(queryString.indexOf("\'") > -1) ||(queryString.indexOf("\"") > -1)) {
+
+			System.out.println("Project:" + projectName + " url = " + urlpath.toString()+"?"+queryString);
+
+			response.setStatus(301);
+			response.setHeader("Location","../../index.jsp");
+			response.setHeader( "Connection", "close" );
+			return;
+		} 
+	} catch (Exception e) {
+		StringBuffer pathE = request.getRequestURL();	 									//取得路徑
+		System.out.println("twmakers url Error info:["+e+"]Path:["+pathE.toString()+"]Time:["+DateTimeTool.dateTimeString()+"]");
+		
+		// 新增跳轉功能 20230113 May
+		response.setStatus(301);
+		response.setHeader("Location","../../index.jsp"); 
+		response.setHeader( "Connection", "close" );
+		return;
+	}
+
+	//301重定向
+	if((!"localhost".equals(request.getServerName()))&&(!"".equals(SiteSetup.getSetup("seo.301url").getString("ss_value")))&&(request.getRequestURL().indexOf(SiteSetup.getSetup("seo.301url").getString("ss_value"))<0)){
+	 	response.setStatus(301);
+		response.setHeader("Location",SiteSetup.getSetup("seo.301url").getString("ss_value"));
+		response.setHeader( "Connection", "close" );
+		return;
+	}
+
+	//取得時間
+	String get_datetime = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+	String now_time[] = get_datetime.split("-");
+
+	// Default SQL Manager.
+   	SqlManager app_sm = new SqlManager();
+	
+	// Language.    語系取徝 Marco 20140225
+	// 前後台語系分開為不同session
+	String lang = StringTool.validString(request.getParameter("lang")).trim();      								// 從 URL 上取值
+	lang = "".equals(lang)?StringTool.validString((String)session.getAttribute("web_language")).trim():lang;  		// 第二順位從 session 取值
+	if("".equals(lang)) {
+		String[] temp_value = app_sm.select(tblss, "ss_keyword=?", new Object[]{"web.language.offer"}).getString("ss_value").split(";");
+		if (temp_value.length > 0) lang = temp_value[0]; else lang = "tw";											// 第三順位從 DB 取預設值 , 第四順位為預設 tw
+	}
+	session.setAttribute("web_language", lang);
+
+	// 前後台 title 
+	String app_mistitle = SiteSetup.getSetup("mis_title"+"."+lang).getString("ss_text");
+		if(("".equals(app_mistitle)) && (!"tw".equals(lang))) app_mistitle = SiteSetup.getSetup("mis_title.tw").getString("ss_text");
+	String app_webtitle = SiteSetup.getSetup("web_title"+"."+lang).getString("ss_text");
+	
+   // Upload file relative path.
+   String _filespath = AppConfig.getProperty("folder.upload");
+   // Upload file absolute path.
+   String app_uploadpath = request.getRealPath(_filespath);
+   // Show file relative path.
+   String app_fetchpath = request.getContextPath() + _filespath;
+   // Today
+   String app_today = DateTimeTool.dateString();
+   
+   // The page number.
+   String npage = request.getParameter("npage");
+   int pageno = 1;
+	// 防止 npage 不為數字 20221209 May
+   try{
+	   if (npage != null) {
+	     pageno = Integer.parseInt(npage);
+	   }
+   } catch (Exception e) {
+      // 判斷字串的長度是否太長(>100) 20221212 May
+      if(npage.length()>100){
+   	   	   response.setStatus(301);
+		   response.setHeader("Location","../../index.jsp"); 
+		   response.setHeader( "Connection", "close" );
+		   return;
+      } else{
+    	  pageno = 1;
+      }
+    } 
+	
+	// 弱掃用
+	String dmid = request.getParameter("dm_id");
+	if(dmid != null){
+		if(dmid.length()>100){
+			response.setStatus(301);
+			response.setHeader("Location","../../index.jsp"); 
+			response.setHeader( "Connection", "close" );
+			return;
+		} else {
+			dmid = StringTool.validString(dmid);
+		}
+	}
+	
+	String search_keywords = request.getParameter("search");
+	if(search_keywords != null){
+		if(search_keywords.length()>100){
+			response.setStatus(301);
+			response.setHeader("Location","../../index.jsp"); 
+			response.setHeader( "Connection", "close" );
+			return;
+		} else {
+			search_keywords = StringTool.validString(search_keywords);
+		}
+	}
+	
+   
+   // The data pager.
+   DataPager app_dp = null;
+   
+   // The integer format.
+   DecimalFormat app_df = new DecimalFormat(",###");
+   
+   // Default menu status. 0 - Whole(全部顯示), 1 - Optional(只顯示有權限的選單)
+   String app_menu = "1";
+   
+   // 專案代號
+   String projectName = "twmakers";
+%>

@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "./static/css/main.1ff45fc1.css",
+    "main.js": "./static/js/main.16b98e0b.js",
+    "static/media/08-2遊戲畫面2.png": "./static/media/08-2遊戲畫面2.f0d13d5bcaca07248b01.png",
+    "static/media/02_說明.png": "./static/media/02_說明.b0b5c1ed9a84a2b8b52c.png",
+    "static/media/01.png": "./static/media/01.14f74daf45eca1744229.png",
+    "static/media/bg.jpg": "./static/media/bg.6180d11933faec008674.jpg",
+    "static/media/03.png": "./static/media/03.d0dee831e10861b0e5ff.png",
+    "static/media/02.png": "./static/media/02.687ef1c8acc6f331df4f.png",
+    "static/media/bg2.jpg": "./static/media/bg2.83952870721a68e5ed79.jpg",
+    "static/media/bg1.jpg": "./static/media/bg1.25cc5807e8714d10c758.jpg",
+    "static/media/game-desc.jpg": "./static/media/game-desc.db3e218ddd3659a8e9c9.jpg",
+    "static/media/answer.jpg": "./static/media/answer.7ccb54c179e21c56653b.jpg",
+    "static/media/question.jpg": "./static/media/question.7caa1de81b320c79c97d.jpg",
+    "static/media/login_panel.png": "./static/media/login_panel.bf9deb9bbaaded928ec5.png",
+    "static/media/login_btn.png": "./static/media/login_btn.6ce8c7f3da83b6c48171.png",
+    "static/media/frame.png": "./static/media/frame.3bedbbd8b78b6bfb88f0.png",
+    "static/media/pass_btn.png": "./static/media/pass_btn.678a3c78b309255d6e41.png",
+    "static/media/start_btn.png": "./static/media/start_btn.f8212c28f134111f1f6a.png",
+    "static/media/correct.png": "./static/media/correct.b45de40be007d3a073d3.png",
+    "static/media/wrong.png": "./static/media/wrong.4de7988086d27dbd3e5b.png",
+    "static/media/study_btn.png": "./static/media/study_btn.d35a1560946bf0b3ce56.png",
+    "index.html": "./index.html",
+    "main.1ff45fc1.css.map": "./static/css/main.1ff45fc1.css.map",
+    "main.16b98e0b.js.map": "./static/js/main.16b98e0b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1ff45fc1.css",
+    "static/js/main.16b98e0b.js"
+  ]
+}
